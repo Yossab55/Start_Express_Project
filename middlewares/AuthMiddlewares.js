@@ -1,19 +1,35 @@
-import JWT from "jsonwebtoken";
+//+ in the name of cross
+import { JWT } from "../source/interface/JWT.js";
+import { env } from "../utils/helpers.js";
+import { AppError } from "../source/error/AppError.js";
+import { UNAUTHORIZED } from "../utils/constants/ResponseCode.js";
 
-const requiredAuth = async function (req, res, next) {
+async function requiredAuth(req, res, next) {
   const token = req.cookies.token;
-  //Todo you can promisfy JWT.verify
-  //Todo don't forget to setup JWT_SECRET
   if (token) {
-    await JWT.verify(token, JWT_SECRET, (tokenError, tokenDecoded) => {
-      if (tokenError) {
-        // redirect
-        return;
-      }
-      req.user.id = tokenDecoded.id;
-      return next();
-    });
+    const tokenDecoded = await JWT.verifyToken(token, env("JWT_SECRET"));
+    req.user = { id: tokenDecoded.id };
+    return next();
   }
-  //redirect;
-  return;
-};
+  throw AppError("user is not authenticated", UNAUTHORIZED);
+}
+export { requiredAuth };
+
+async function isUserLoggedIn(req, res, next) {
+  const token = req.cookies.token;
+  if (token) {
+    try {
+      const tokenDecoded = await verify(token, env("JWT_SECRET"));
+      req.locals.user = { id: tokenDecoded.id };
+      return next();
+    } catch (error) {
+      req.locals.user = null;
+      return next();
+    }
+  } else {
+    req.locals.user = null;
+    return next();
+  }
+}
+
+export { isUserLoggedIn };

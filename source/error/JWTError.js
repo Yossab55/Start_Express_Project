@@ -1,10 +1,10 @@
 import { BaseError } from "./BaseError.js";
 import { BAD_REQUEST } from "../../utils/constants/ResponseCode.js";
 
-function AppError(message, responseCode = BAD_REQUEST) {
+function JWTError(message, responseCode = BAD_REQUEST) {
   const error = Object.create(BaseError);
-  error.init(message, "AppError", responseCode);
+  error.init(message, "JsonWebTokenError", responseCode);
   return error;
 }
 
-export { AppError };
+export { JWTError };
