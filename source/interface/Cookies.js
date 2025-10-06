@@ -2,7 +2,7 @@ import { env } from "../../utils/helpers.js";
 
 const cookieOptions = {
   httpOnly: true,
-  maxAge: env("EXPIRES_IN"),
+  maxAge: env("EXPIRES_IN") * 1000,
 };
 const cookieOptionsRemove = {
   httpOnly: true,

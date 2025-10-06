@@ -11,12 +11,10 @@ const options = {
 JWT.createToken = async function createToken(payload) {
   return await sign(payload, env("JWT_SECRET"), options);
 };
+
+//@ verify token also used to decode token
 JWT.verifyToken = async function verifyToken(token, secret, params) {
   return await verify(token, secret, params);
 };
-//changing the name for me because sometime i forget that
-// verify is also used to decodeToken
-
-JWT.decodeToken = JWT.verifyToken;
 
 export { JWT };
